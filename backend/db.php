@@ -1,7 +1,7 @@
 <?php
 $host = "localhost";
-$user = "root";
-$password = "";
+$user = "skillswap_user";
+$password = "1234";
 $dbname = "skillswap";
 
 $conn = new mysqli($host, $user, $password, $dbname);
