@@ -1,5 +1,6 @@
 <?php
 header("Access-Control-Allow-Origin: *");
+header("Content-Type: application/json");
 header("Access-Control-Allow-Headers: Content-Type");
 header("Access-Control-Allow-Methods: POST");
 
@@ -10,37 +11,37 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-$json = file_get_contents("php://input");
-$data = json_decode($json, true);
-
-// DEBUG (temporary)
-file_put_contents("debug.txt", $json);
-
-if (!$data) {
-    echo json_encode([
-        "error" => "No JSON received",
-        "raw" => $json
-    ]);
-    exit;
-}
+$data = json_decode(file_get_contents("php://input"), true);
 
 $name = $data["name"] ?? "";
 $email = $data["email"] ?? "";
 $password = $data["password"] ?? "";
 
 if ($name == "" || $email == "" || $password == "") {
-    echo json_encode([
-        "error" => "Missing fields",
-        "debug" => $data
-    ]);
+    echo json_encode(["error" => "Missing fields"]);
     exit;
 }
 
-$sql = "INSERT INTO users (name, email, password)
-        VALUES ('$name', '$email', '$password')";
+// Check if email already registered
+$check = $conn->prepare("SELECT id FROM users WHERE email = ?");
+$check->bind_param("s", $email);
+$check->execute();
+$check->store_result();
 
-if ($conn->query($sql)) {
-    echo json_encode(["message" => "User registered successfully"]);
+if ($check->num_rows > 0) {
+    echo json_encode(["error" => "Email already registered"]);
+    exit;
+}
+
+// Hash the password before saving — never store plain text
+$hashed = password_hash($password, PASSWORD_BCRYPT);
+
+// Use prepared statement — prevents SQL injection
+$stmt = $conn->prepare("INSERT INTO users (name, email, password) VALUES (?, ?, ?)");
+$stmt->bind_param("sss", $name, $email, $hashed);
+
+if ($stmt->execute()) {
+    echo json_encode(["success" => true, "message" => "Account created successfully"]);
 } else {
     echo json_encode(["error" => $conn->error]);
 }
