@@ -22,7 +22,7 @@ if ($name == "" || $email == "" || $password == "") {
     exit;
 }
 
-// Check if email already registered
+// check if the email is already registered
 $check = $conn->prepare("SELECT id FROM users WHERE email = ?");
 $check->bind_param("s", $email);
 $check->execute();
@@ -33,10 +33,11 @@ if ($check->num_rows > 0) {
     exit;
 }
 
-// Hash the password before saving — never store plain text
+// hash the password before saving 
+// this is for improved security
 $hashed = password_hash($password, PASSWORD_BCRYPT);
 
-// Use prepared statement — prevents SQL injection
+// use prepared statement to avoid SQL injection
 $stmt = $conn->prepare("INSERT INTO users (name, email, password) VALUES (?, ?, ?)");
 $stmt->bind_param("sss", $name, $email, $hashed);
 
