@@ -34,10 +34,8 @@ if ($type) {
     ");
     $stmt->bind_param("ss", $keyword, $keyword);
 }
-
 $stmt->execute();
 $result = $stmt->get_result();
 $skills = $result->fetch_all(MYSQLI_ASSOC);
-
 echo json_encode(["success" => true, "results" => $skills]);
 ?>
