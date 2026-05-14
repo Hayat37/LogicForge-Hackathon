@@ -1,56 +1,35 @@
 import { useState } from "react";
+import Login from "./Login";
+import Register from "./Register";
+import Dashboard from "./Dashboard";
 
 function App() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-  const registerUser = async () => {
-  const payload = { name, email, password };
-
-  console.log("SENDING:", payload);
-
-  const res = await fetch("http://localhost:8000/register.php", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(payload)
-  });
-
-  const data = await res.json();
-  console.log(data);
-};
-  
-
-  
+  const [page, setPage] = useState("register");
+  const [user, setUser] = useState(null);
 
   return (
     <div style={{ padding: 20 }}>
-      <h1>SkillSwap Register</h1>
+      <h1>SkillSwap</h1>
 
-      <input
-  placeholder="Name"
-  value={name}
-  onChange={(e) => setName(e.target.value)}
-/>
+      {!user && (
+        <>
+          <button onClick={() => setPage("register")}>Register</button>
+          <button onClick={() => setPage("login")}>Login</button>
+          <hr />
+        </>
+      )}
 
-<input
-  placeholder="Email"
-  value={email}
-  onChange={(e) => setEmail(e.target.value)}
-/>
-
-<input
-  placeholder="Password"
-  value={password}
-  onChange={(e) => setPassword(e.target.value)}
-/>
-      <br /><br />
-
-      <button onClick={registerUser}>
-        Register
-      </button>
+      {/* IF LOGGED IN → SHOW DASHBOARD */}
+      {user ? (
+        <Dashboard user={user} />
+      ) : (
+        <>
+          {page === "register" && <Register />}
+          {page === "login" && (
+            <Login setUser={setUser} />
+          )}
+        </>
+      )}
     </div>
   );
 }
