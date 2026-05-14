@@ -36,7 +36,7 @@ function Register() {
 
   return (
     <div className="container">
-      <div className="logo">SkillSwap 🔄</div>
+      <div className="logo">SkillSwap </div>
       <h2>Create Account</h2>
       <input
         placeholder="Full Name"
