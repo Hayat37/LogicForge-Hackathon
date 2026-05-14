@@ -1,41 +1,51 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-export default function Login() {
+export default function Login({ setUser }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
+  const navigate = useNavigate();
 
   const loginUser = async () => {
-    const res = await fetch("http://localhost:8000/login.php", {
+    if (!email || !password) {
+      setMessage("Please fill in all fields");
+      return;
+    }
+
+    const res = await fetch("http://localhost/LogicForge-Hackathon/backend/login.php", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
     });
     const data = await res.json();
-    console.log(data);
+
+    if (data.success) {
+      setUser(data.user);
+      navigate("/dashboard");
+    } else {
+      setMessage(data.error || "Login failed");
+    }
   };
 
   return (
     <div className="container">
-      <div className="logo">SkillSwap </div>
+      <div className="logo">SkillSwap</div>
       <h2>Welcome Back</h2>
-
       <input
         type="email"
         placeholder="Email Address"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
-
       <input
         type="password"
         placeholder="Password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
-
       <button onClick={loginUser}>Sign In</button>
-
+      {message && <p>{message}</p>}
       <p className="link">
         Don't have an account? <Link to="/register">Register</Link>
       </p>
