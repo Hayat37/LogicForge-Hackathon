@@ -62,14 +62,16 @@ function Dashboard({ user, setUser }) {
       body: JSON.stringify({ user_id: user.id, title, type, description }),
     });
     const data = await res.json();
-    if (data.success) {
+if (data.success) {
       setMessage("Skill posted successfully!");
+      setTimeout(() => setMessage(""), 3000);
       setTitle("");
       setDescription("");
       fetchSkills();
       setView("feed");
     } else {
       setMessage(data.error || "Failed to post skill");
+      setTimeout(() => setMessage(""), 3000);
     }
   };
 
@@ -81,7 +83,7 @@ function Dashboard({ user, setUser }) {
     if (data.success) setSkills(data.results);
   };
 
-  const requestSession = async (skill_id) => {
+const requestSession = async (skill_id) => {
     const res = await fetch("http://localhost/LogicForge-Hackathon/backend/sessions.php", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -93,6 +95,9 @@ function Dashboard({ user, setUser }) {
     });
     const data = await res.json();
     setCardMessages(prev => ({ ...prev, [skill_id]: data.message || data.error }));
+    setTimeout(() => {
+      setCardMessages(prev => ({ ...prev, [skill_id]: null }));
+    }, 3000);
   };
 
   const respondToSession = async (session_id, status) => {
