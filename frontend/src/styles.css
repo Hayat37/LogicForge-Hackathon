@@ -237,3 +237,21 @@ body.scrollable {
   width: auto;
   padding: 16px 20px;
 }
+
+
+.badge {
+  display: inline-block;
+  background: #ef4444;
+  color: white;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  font-size: 11px;
+  text-align: center;
+  line-height: 18px;
+  margin-left: 6px;
+}
+
+.user-info {
+  margin-bottom: 8px;
+}
