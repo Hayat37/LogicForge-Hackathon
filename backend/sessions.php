@@ -15,6 +15,9 @@ include "db.php";
 $method = $_SERVER['REQUEST_METHOD'];
 
 
+// =======================
+// POST: Create session
+// =======================
 if ($method === 'POST') {
 
     $data = json_decode(file_get_contents("php://input"), true);
@@ -28,7 +31,7 @@ if ($method === 'POST') {
     $skill_id = $data['skill_id'];
     $message = $data['message'] ?? "";
 
-    // Check skill owner
+    // Get skill owner
     $check = $conn->prepare("SELECT user_id FROM skills WHERE id = ?");
     $check->bind_param("i", $skill_id);
     $check->execute();
@@ -39,20 +42,23 @@ if ($method === 'POST') {
         exit;
     }
 
-    // Prevent requesting own skill
+    // Prevent self request
     if ($skill['user_id'] == $requester_id) {
         echo json_encode(["error" => "You cannot request your own skill"]);
         exit;
     }
 
-    // Prevent duplicate requests
-    $dupCheck = $conn->prepare("SELECT id FROM sessions WHERE requester_id = ? AND skill_id = ?");
+    // Prevent duplicates
+    $dupCheck = $conn->prepare("
+        SELECT id FROM sessions 
+        WHERE requester_id = ? AND skill_id = ?
+    ");
     $dupCheck->bind_param("ii", $requester_id, $skill_id);
     $dupCheck->execute();
     $dupCheck->store_result();
 
     if ($dupCheck->num_rows > 0) {
-        echo json_encode(["error" => "You have already requested this session"]);
+        echo json_encode(["error" => "You already requested this session"]);
         exit;
     }
 
@@ -71,8 +77,12 @@ if ($method === 'POST') {
     } else {
         echo json_encode(["error" => $conn->error]);
     }
+}
 
-} 
+
+// =======================
+// GET: Fetch sessions
+// =======================
 elseif ($method === 'GET') {
 
     $user_id = $_GET['user_id'] ?? null;
@@ -90,6 +100,7 @@ elseif ($method === 'GET') {
             sessions.created_at,
             skills.title AS skill_title,
             skills.type AS skill_type,
+            users.id AS requester_id,
             users.name AS requester_name
         FROM sessions
         JOIN skills ON sessions.skill_id = skills.id
@@ -107,8 +118,12 @@ elseif ($method === 'GET') {
         "success" => true,
         "sessions" => $sessions
     ]);
+}
 
-} 
+
+// =======================
+// PUT: Accept / Decline
+// =======================
 elseif ($method === 'PUT') {
 
     $data = json_decode(file_get_contents("php://input"), true);
@@ -141,6 +156,5 @@ elseif ($method === 'PUT') {
     } else {
         echo json_encode(["error" => $conn->error]);
     }
-
-} 
+}
 ?>
