@@ -4,6 +4,7 @@ header("Content-Type: application/json");
 header("Access-Control-Allow-Headers: Content-Type");
 header("Access-Control-Allow-Methods: GET, POST, PUT, OPTIONS");
 
+// Handle preflight request
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit;
@@ -13,8 +14,9 @@ include "db.php";
 
 $method = $_SERVER['REQUEST_METHOD'];
 
+
 if ($method === 'POST') {
-if ($method === 'POST') {
+
     $data = json_decode(file_get_contents("php://input"), true);
 
     if (empty($data['requester_id']) || empty($data['skill_id'])) {
@@ -22,9 +24,13 @@ if ($method === 'POST') {
         exit;
     }
 
-    // Prevent requesting own skill
+    $requester_id = $data['requester_id'];
+    $skill_id = $data['skill_id'];
+    $message = $data['message'] ?? "";
+
+    // Check skill owner
     $check = $conn->prepare("SELECT user_id FROM skills WHERE id = ?");
-    $check->bind_param("i", $data['skill_id']);
+    $check->bind_param("i", $skill_id);
     $check->execute();
     $skill = $check->get_result()->fetch_assoc();
 
@@ -33,14 +39,15 @@ if ($method === 'POST') {
         exit;
     }
 
-    if ($skill['user_id'] == $data['requester_id']) {
+    // Prevent requesting own skill
+    if ($skill['user_id'] == $requester_id) {
         echo json_encode(["error" => "You cannot request your own skill"]);
         exit;
     }
 
     // Prevent duplicate requests
     $dupCheck = $conn->prepare("SELECT id FROM sessions WHERE requester_id = ? AND skill_id = ?");
-    $dupCheck->bind_param("ii", $data['requester_id'], $data['skill_id']);
+    $dupCheck->bind_param("ii", $requester_id, $skill_id);
     $dupCheck->execute();
     $dupCheck->store_result();
 
@@ -49,17 +56,26 @@ if ($method === 'POST') {
         exit;
     }
 
-    $stmt = $conn->prepare("INSERT INTO sessions (requester_id, skill_id, message) VALUES (?, ?, ?)");
-    $stmt->bind_param("iis", $data['requester_id'], $data['skill_id'], $data['message']);
+    // Insert session
+    $stmt = $conn->prepare("
+        INSERT INTO sessions (requester_id, skill_id, message)
+        VALUES (?, ?, ?)
+    ");
+    $stmt->bind_param("iis", $requester_id, $skill_id, $message);
 
     if ($stmt->execute()) {
-        echo json_encode(["success" => true, "message" => "Session requested successfully"]);
+        echo json_encode([
+            "success" => true,
+            "message" => "Session requested successfully"
+        ]);
     } else {
         echo json_encode(["error" => $conn->error]);
     }
 
-} elseif ($method === 'GET') {
-    $user_id = isset($_GET['user_id']) ? $_GET['user_id'] : null;
+} 
+elseif ($method === 'GET') {
+
+    $user_id = $_GET['user_id'] ?? null;
 
     if (!$user_id) {
         echo json_encode(["error" => "User ID required"]);
@@ -72,22 +88,29 @@ if ($method === 'POST') {
             sessions.status,
             sessions.message,
             sessions.created_at,
-            skills.title as skill_title,
-            skills.type as skill_type,
-            users.name as requester_name
+            skills.title AS skill_title,
+            skills.type AS skill_type,
+            users.name AS requester_name
         FROM sessions
         JOIN skills ON sessions.skill_id = skills.id
         JOIN users ON sessions.requester_id = users.id
         WHERE skills.user_id = ? OR sessions.requester_id = ?
         ORDER BY sessions.created_at DESC
     ");
+
     $stmt->bind_param("ii", $user_id, $user_id);
     $stmt->execute();
+
     $sessions = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 
-    echo json_encode(["success" => true, "sessions" => $sessions]);
+    echo json_encode([
+        "success" => true,
+        "sessions" => $sessions
+    ]);
 
-} elseif ($method === 'PUT') {
+} 
+elseif ($method === 'PUT') {
+
     $data = json_decode(file_get_contents("php://input"), true);
 
     if (empty($data['session_id']) || empty($data['status'])) {
@@ -96,18 +119,28 @@ if ($method === 'POST') {
     }
 
     $allowed = ['accepted', 'declined'];
+
     if (!in_array($data['status'], $allowed)) {
         echo json_encode(["error" => "Invalid status"]);
         exit;
     }
 
-    $stmt = $conn->prepare("UPDATE sessions SET status = ? WHERE id = ?");
+    $stmt = $conn->prepare("
+        UPDATE sessions 
+        SET status = ? 
+        WHERE id = ?
+    ");
+
     $stmt->bind_param("si", $data['status'], $data['session_id']);
 
     if ($stmt->execute()) {
-        echo json_encode(["success" => true, "message" => "Session " . $data['status']]);
+        echo json_encode([
+            "success" => true,
+            "message" => "Session " . $data['status']
+        ]);
     } else {
         echo json_encode(["error" => $conn->error]);
     }
-}
+
+} 
 ?>
