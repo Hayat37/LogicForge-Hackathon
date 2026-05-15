@@ -137,6 +137,14 @@ function Dashboard({ user, setUser }) {
     navigate("/");
   };
 
+  const getSessionLabel = (session) => {
+    const action = session.skill_type === "offer" ? "to learn" : "to teach";
+    if (session.requester_name === user.name) {
+      return `You requested ${action}`;
+    }
+    return `${session.requester_name} requested ${action}`;
+  };
+
   return (
     <div className="dashboard">
 
@@ -154,7 +162,7 @@ function Dashboard({ user, setUser }) {
             <button onClick={() => { setView("feed"); setMessage(""); }}>
               Skills Feed
             </button>
-            <button onClick={() => { setView("post"); setMessage(""); }}>
+            <button className="post-skill-btn" onClick={() => { setView("post"); setMessage(""); }}>
               + Post Skill
             </button>
             <button onClick={() => { setView("sessions"); setMessage(""); }}>
@@ -286,9 +294,7 @@ function Dashboard({ user, setUser }) {
               <p className="skill-type">
                 {session.skill_type === "offer" ? "Teaching" : "Learning"}
               </p>
-              <p className="skill-desc">
-                {session.requester_name === user.name ? "You requested" : `From: ${session.requester_name}`}
-              </p>
+              <p className="session-requester">{getSessionLabel(session)}</p>
               <p className="skill-author">
                 Status: <span className={`status-${session.status}`}>{session.status}</span>
               </p>
