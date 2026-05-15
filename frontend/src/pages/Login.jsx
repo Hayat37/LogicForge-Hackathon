@@ -28,7 +28,7 @@ export default function Login({ setUser }) {
       setMessage("Please fill in all fields");
       return;
     }
-    const res = await fetch("http://localhost/LogicForge-Hackathon/backend/login.php", {
+    const res = await fetch("https://skillswap-pro.infinityfreeapp.com/backend/login.php", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),

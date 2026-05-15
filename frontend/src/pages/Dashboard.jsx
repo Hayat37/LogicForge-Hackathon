@@ -29,7 +29,7 @@ function Dashboard({ user, setUser }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const resSkills = await fetch("http://localhost/LogicForge-Hackathon/backend/skills.php");
+        const resSkills = await fetch("https://skillswap-pro.infinityfreeapp.com/backend/skills.php");
         const dataSkills = await resSkills.json();
         if (dataSkills.success) setSkills(dataSkills.skills);
       } catch (error) {
@@ -37,7 +37,7 @@ function Dashboard({ user, setUser }) {
       }
       try {
         const resSessions = await fetch(
-          `http://localhost/LogicForge-Hackathon/backend/sessions.php?user_id=${user.id}`
+          `https://skillswap-pro.infinityfreeapp.com/backend/sessions.php?user_id=${user.id}`
         );
         const dataSessions = await resSessions.json();
         if (dataSessions.success) setSessions(dataSessions.sessions);
@@ -51,14 +51,14 @@ function Dashboard({ user, setUser }) {
   }, [user.id]);
 
   const fetchSkills = async () => {
-    const res = await fetch("http://localhost/LogicForge-Hackathon/backend/skills.php");
+    const res = await fetch("https://skillswap-pro.infinityfreeapp.com/backend/skills.php");
     const data = await res.json();
     if (data.success) setSkills(data.skills);
   };
 
   const fetchSessions = async () => {
     const res = await fetch(
-      `http://localhost/LogicForge-Hackathon/backend/sessions.php?user_id=${user.id}`
+      `https://skillswap-pro.infinityfreeapp.com/backend/sessions.php?user_id=${user.id}`
     );
     const data = await res.json();
     if (data.success) setSessions(data.sessions);
@@ -69,7 +69,7 @@ function Dashboard({ user, setUser }) {
       setMessage("Please enter a skill title");
       return;
     }
-    const res = await fetch("http://localhost/LogicForge-Hackathon/backend/skills.php", {
+    const res = await fetch("https://skillswap-pro.infinityfreeapp.com/backend/skills.php", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ user_id: user.id, title, type, description }),
@@ -90,14 +90,14 @@ function Dashboard({ user, setUser }) {
 
   const searchSkills = async () => {
     const res = await fetch(
-      `http://localhost/LogicForge-Hackathon/backend/search.php?q=${search}`
+      `https://skillswap-pro.infinityfreeapp.com/backend/search.php?q=${search}`
     );
     const data = await res.json();
     if (data.success) setSkills(data.results);
   };
 
   const requestSession = async (skill_id) => {
-    const res = await fetch("http://localhost/LogicForge-Hackathon/backend/sessions.php", {
+    const res = await fetch("https://skillswap-pro.infinityfreeapp.com/backend/sessions.php", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -114,10 +114,10 @@ function Dashboard({ user, setUser }) {
   };
 
   const respondToSession = async (session_id, status) => {
-    const res = await fetch("http://localhost/LogicForge-Hackathon/backend/sessions.php", {
-      method: "PUT",
+    const res = await fetch("https://skillswap-pro infinityfreeapp.com/backend/sessions.php", {
+      method: "POST", // Changed to POST if your backend expects POST for response
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ session_id, status }),
+      body: JSON.stringify({ session_id, status, action: 'respond' }),
     });
     const data = await res.json();
     if (data.success) fetchSessions();
@@ -140,11 +140,29 @@ function Dashboard({ user, setUser }) {
 
   const getSessionLabel = (session) => {
     const action = session.skill_type === "offer" ? "to learn" : "to teach";
-    if (session.requester_name === user.name) {
-      return `You requested ${action}`;
-    }
+    if (session.requester_name === user.name) return `You requested ${action}`;
     return `${session.requester_name} requested ${action}`;
   };
+
+  const getPartnerId = (session) =>
+    session.requester_name === user.name
+      ? session.skill_owner_id
+      : session.requester_id;
+
+  const getPartnerName = (session) =>
+    session.requester_name === user.name
+      ? session.skill_owner_name
+      : session.requester_name;
+
+  // Calculates how many people you have active chats with for the red badge
+  const acceptedSessions = sessions.filter(s => s.status === "accepted");
+  const seenPartners = new Set();
+  const messageThreadsCount = acceptedSessions.filter(s => {
+    const pid = getPartnerId(s);
+    if (seenPartners.has(pid)) return false;
+    seenPartners.add(pid);
+    return true;
+  }).length;
 
   const filteredFeedSkills = skills.filter((skill) => {
     if (feedTypeFilter === "offer") return skill.type === "offer";
@@ -175,17 +193,25 @@ function Dashboard({ user, setUser }) {
         <div className="dashboard-header-inner">
           <div className="logo">SkillSwap</div>
           <div className="dashboard-actions">
-            <button onClick={() => { setView("feed"); setMessage(""); }}>
+            <button className={view === "feed" ? "active-nav" : ""} onClick={() => { setView("feed"); setMessage(""); }}>
               Skills Feed
             </button>
-            <button className="post-skill-btn" onClick={() => { setView("post"); setMessage(""); }}>
+            <button className={view === "post" ? "active-nav" : ""} onClick={() => { setView("post"); setMessage(""); }}>
               + Post Skill
             </button>
-            <button onClick={() => { setView("sessions"); setMessage(""); }}>
+            <button className={view === "sessions" ? "active-nav" : ""} onClick={() => { setView("sessions"); setMessage(""); }}>
               Sessions {pendingSessions.length > 0 && (
                 <span className="badge">{pendingSessions.length}</span>
               )}
             </button>
+            
+            {/* UPDATED: This button now navigates directly to the chat page */}
+            <button onClick={() => navigate("/chat")}>
+              Messages {messageThreadsCount > 0 && (
+                <span className="badge">{messageThreadsCount}</span>
+              )}
+            </button>
+
             <button className="logout-btn" onClick={logout}>Logout</button>
           </div>
         </div>
@@ -205,7 +231,6 @@ function Dashboard({ user, setUser }) {
 
       {view === "post" && (
         <div className="post-form">
-
           <input
             placeholder="Skill title (e.g. React, Math, Photoshop)"
             value={title}
@@ -224,10 +249,9 @@ function Dashboard({ user, setUser }) {
         </div>
       )}
 
+      {/* ── FEED ── */}
       {view === "feed" && (
         <div>
-
-
           <div className="search-bar">
             <input
               placeholder="Search skills..."
@@ -285,10 +309,9 @@ function Dashboard({ user, setUser }) {
         </div>
       )}
 
+      {/* ── SESSIONS ── */}
       {view === "sessions" && (
         <div>
-
-
           <div className="session-filters">
             <select
               value={sessionFilter}
@@ -325,6 +348,7 @@ function Dashboard({ user, setUser }) {
               <p className="skill-author">
                 Status: <span className={`status-${session.status}`}>{session.status}</span>
               </p>
+
               {session.status === "pending" && session.requester_name !== user.name && (
                 <div className="session-actions">
                   <button className="accept-btn" onClick={() => respondToSession(session.id, "accepted")}>
@@ -335,6 +359,15 @@ function Dashboard({ user, setUser }) {
                   </button>
                 </div>
               )}
+
+              {session.status === "accepted" && (
+                <button
+                  className="message-btn"
+                  onClick={() => navigate(`/chat?user=${getPartnerId(session)}`)}
+                >
+                  Message {getPartnerName(session)}
+                </button>
+              )}
             </div>
           ))}
 
@@ -343,6 +376,8 @@ function Dashboard({ user, setUser }) {
           )}
         </div>
       )}
+      
+      {/* The "view === messages" block was removed from here to prevent duplication */}
     </div>
   );
 }

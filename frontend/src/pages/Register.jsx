@@ -46,7 +46,7 @@ function Register() {
       return;
     }
     try {
-      const res = await fetch("http://localhost/LogicForge-Hackathon/backend/register.php", {
+      const res = await fetch("https://skillswap-pro.infinityfreeapp.com/backend/register.php", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name: name.trim(), email: email.trim(), password, bio: bio.trim() }),

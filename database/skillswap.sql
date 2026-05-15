@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 14, 2026 at 11:11 AM
+-- Generation Time: May 15, 2026 at 04:44 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -24,6 +24,20 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `messages`
+--
+
+CREATE TABLE `messages` (
+  `id` int(11) NOT NULL,
+  `sender_id` int(11) NOT NULL,
+  `receiver_id` int(11) NOT NULL,
+  `message` text NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `sessions`
 --
 
@@ -35,6 +49,24 @@ CREATE TABLE `sessions` (
   `message` text DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `sessions`
+--
+
+INSERT INTO `sessions` (`id`, `requester_id`, `skill_id`, `status`, `message`, `created_at`) VALUES
+(1, 6, 1, 'declined', 'I would like to learn this skill!', '2026-05-15 08:22:27'),
+(2, 6, 1, 'declined', 'I would like to learn this skill!', '2026-05-15 08:37:50'),
+(3, 6, 1, 'declined', 'I would like to learn this skill!', '2026-05-15 08:38:03'),
+(4, 6, 1, 'accepted', 'I would like to learn this skill!', '2026-05-15 08:38:04'),
+(5, 6, 1, 'accepted', 'I would like to learn this skill!', '2026-05-15 08:38:04'),
+(6, 8, 2, 'pending', 'I would like to learn this skill!', '2026-05-15 08:42:55'),
+(7, 8, 2, 'pending', 'I would like to learn this skill!', '2026-05-15 08:51:51'),
+(8, 8, 2, 'pending', 'I would like to learn this skill!', '2026-05-15 08:54:58'),
+(9, 8, 4, 'declined', 'I would like to learn this skill!', '2026-05-15 11:54:40'),
+(10, 8, 5, 'declined', 'I would like to learn this skill!', '2026-05-15 11:59:59'),
+(11, 8, 6, 'declined', 'I would like to learn this skill!', '2026-05-15 12:33:55'),
+(12, 11, 6, 'accepted', 'I would like to learn this skill!', '2026-05-15 12:53:18');
 
 -- --------------------------------------------------------
 
@@ -50,6 +82,18 @@ CREATE TABLE `skills` (
   `description` text DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `skills`
+--
+
+INSERT INTO `skills` (`id`, `user_id`, `title`, `type`, `description`, `created_at`) VALUES
+(1, 8, 'React Native', 'offer', '', '2026-05-15 08:21:25'),
+(2, 6, 'math', 'offer', '', '2026-05-15 08:37:57'),
+(3, 8, 'Biology', 'need', '', '2026-05-15 11:20:09'),
+(4, 10, 'math', 'offer', 'i know math', '2026-05-15 11:54:10'),
+(5, 10, 'biology', 'offer', 'none', '2026-05-15 11:59:43'),
+(6, 10, 'Chemistry', 'offer', 'I can teach chemistry', '2026-05-15 12:33:23');
 
 -- --------------------------------------------------------
 
@@ -71,12 +115,22 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `password`, `bio`, `created_at`) VALUES
-(1, 'Ephrata', 'ephrata@gmail.com', '$2y$10$l3tx4y3V5gltbE.Lz0xm7.rgTxGFcsU7wcoR32I1vnxjXqidgOa.C', NULL, '2026-05-14 07:56:34'),
-(2, 'Abebe Bekele', 'abebebek@gmail.com', '$2y$10$Q9k10SF7T9BTLP2A3aWNRu7njx6qsf54QOd1H.uwhv4K8PyyNiAyW', NULL, '2026-05-14 08:50:43');
+(6, 'Ephrata', 'eph@gmail.com', '$2y$10$/UBio3sCh2nw8LBX53K2KuN0dXt4TE8QyAoHTnqgrVKfqU1jeV9tm', NULL, '2026-05-14 10:47:42'),
+(7, 'hi', 'hi@gmail', '$2y$10$TxARztaU.tW27r8CVFEOPeClLt3PCMrGLMRD0OjBz8b/eYSaXXyXa', NULL, '2026-05-14 14:32:28'),
+(8, 'a b', 'a@gmail.com', '$2y$10$jG93u1W6q3GWC2h3toLxvO/DMv5MHO7VhvO23LiZl.aXKahj/FBty', NULL, '2026-05-15 08:07:07'),
+(9, 'heeh', 'ab@gmail.com', '$2y$10$FO15n6QNqPkZKgT6kcWtwufQ3iFy6Vzodl/H.MknAmNAIdiGmcnNS', '', '2026-05-15 11:53:03'),
+(10, 'hh', 'ac@gmail.com', '$2y$10$udBhsQCAqXUTG1EdVnDtPuFMMeqAl7nO0aOxXV/AEiVjhEZlgKds.', 'hello', '2026-05-15 11:53:44'),
+(11, 'ggg', 'ag@gmail.com', '$2y$10$JH94ROGGlD15M/.9Pb/7PesZMXBJB2rcU3Y4RwjhesoUx70w9yrJm', '', '2026-05-15 12:52:44');
 
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `messages`
+--
+ALTER TABLE `messages`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `sessions`
@@ -105,22 +159,28 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT for table `messages`
+--
+ALTER TABLE `messages`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `sessions`
 --
 ALTER TABLE `sessions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `skills`
 --
 ALTER TABLE `skills`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- Constraints for dumped tables
