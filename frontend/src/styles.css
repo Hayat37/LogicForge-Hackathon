@@ -249,14 +249,21 @@ button:hover {
   margin-bottom: 8px;
 }
 
+.field-label {
+  font-weight: 600;
+  opacity: 0.6;
+}
+
 .session-requester {
-  font-size: 13px;
-  color: #64748b;
-  margin-bottom: 8px;
+  font-size: clamp(14px, 1.2vw, 17px);
+  font-weight: 600;
+  color: #f1f5f9;
+  margin-bottom: 6px;
+  margin-top: 2px;
 }
 
 body.light-mode .session-requester {
-  color: #94a3b8;
+  color: #0f172a;
 }
 
 .skill-author {
@@ -362,6 +369,20 @@ body.light-mode .session-requester {
   font-size: 14px;
   cursor: pointer;
   outline: none;
+}
+
+.feed-filters {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.session-filters {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
 }
 
 .session-date {
@@ -644,4 +665,17 @@ body.light-mode .bio-input::placeholder {
   color: #22c55e;
   background: rgba(34, 197, 94, 0.08);
   border: 1px solid rgba(34, 197, 94, 0.2);
+}
+
+.dashboard-header-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.session-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
 }

@@ -13,6 +13,7 @@ function Dashboard({ user, setUser }) {
   const [cardMessages, setCardMessages] = useState({});
   const [sessionFilter, setSessionFilter] = useState("all");
   const [sessionDirection, setSessionDirection] = useState("all");
+  const [feedTypeFilter, setFeedTypeFilter] = useState("all");
   const [darkMode, setDarkMode] = useState(() => {
     return localStorage.getItem("theme") !== "light";
   });
@@ -145,6 +146,21 @@ function Dashboard({ user, setUser }) {
     return `${session.requester_name} requested ${action}`;
   };
 
+  const filteredFeedSkills = skills.filter((skill) => {
+    if (feedTypeFilter === "offer") return skill.type === "offer";
+    if (feedTypeFilter === "need") return skill.type === "need";
+    return true;
+  });
+
+  const filteredSessions = sessions
+    .filter(s => {
+      if (sessionFilter !== "all" && s.skill_type !== sessionFilter) return false;
+      if (sessionDirection === "incoming" && s.requester_name === user.name) return false;
+      if (sessionDirection === "outgoing" && s.requester_name !== user.name) return false;
+      return true;
+    })
+    .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
   return (
     <div className="dashboard">
 
@@ -156,7 +172,7 @@ function Dashboard({ user, setUser }) {
       </button>
 
       <div className="dashboard-header">
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
+        <div className="dashboard-header-inner">
           <div className="logo">SkillSwap</div>
           <div className="dashboard-actions">
             <button onClick={() => { setView("feed"); setMessage(""); }}>
@@ -210,6 +226,8 @@ function Dashboard({ user, setUser }) {
 
       {view === "feed" && (
         <div>
+                    <h2>Browse Skills</h2>
+
           <div className="search-bar">
             <input
               placeholder="Search skills..."
@@ -220,17 +238,37 @@ function Dashboard({ user, setUser }) {
             <button onClick={searchSkills}>Search</button>
           </div>
 
-          {skills.length === 0 && <p className="subtitle">No skills found</p>}
-          {skills.map((skill) => (
+          <div className="feed-filters">
+            <select
+              value={feedTypeFilter}
+              onChange={(e) => setFeedTypeFilter(e.target.value)}
+              className="filter-select"
+            >
+              <option value="all">All Types</option>
+              <option value="offer">Teaching</option>
+              <option value="need">Learning</option>
+            </select>
+          </div>
+
+          {filteredFeedSkills.length === 0 && <p className="subtitle">No skills found</p>}
+          {filteredFeedSkills.map((skill) => (
             <div key={skill.id} className="skill-card">
               <h3>{skill.title}</h3>
               <p className="skill-type">
-                {skill.type === "offer" ? "Teaching" : "Needs help"}
+                {skill.type === "offer" ? "Teaching" : "Needs help with this"}
               </p>
-              {skill.description && <p className="skill-desc">{skill.description}</p>}
-              <p className="skill-author">Posted by {skill.posted_by}</p>
+              {skill.description && (
+                <p className="skill-desc">
+                  <span className="field-label">Description:</span> {skill.description}
+                </p>
+              )}
+              <p className="skill-author">
+                <span className="field-label">Posted by:</span> {skill.posted_by}
+              </p>
               {skill.posted_by_bio && (
-                <p className="skill-poster-bio">{skill.posted_by_bio}</p>
+                <p className="skill-poster-bio">
+                  <span className="field-label">Bio:</span> {skill.posted_by_bio}
+                </p>
               )}
               {skill.user_id !== user.id && (
                 <>
@@ -251,7 +289,7 @@ function Dashboard({ user, setUser }) {
         <div>
           <h2>Session Requests</h2>
 
-          <div style={{ display: "flex", gap: 10, marginBottom: 16, flexWrap: "wrap" }}>
+          <div className="session-filters">
             <select
               value={sessionFilter}
               onChange={(e) => setSessionFilter(e.target.value)}
@@ -273,17 +311,9 @@ function Dashboard({ user, setUser }) {
             </select>
           </div>
 
-          {sessions
-            .filter(s => {
-              if (sessionFilter !== "all" && s.skill_type !== sessionFilter) return false;
-              if (sessionDirection === "incoming" && s.requester_name === user.name) return false;
-              if (sessionDirection === "outgoing" && s.requester_name !== user.name) return false;
-              return true;
-            })
-            .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
-            .map((session) => (
+          {filteredSessions.map((session) => (
             <div key={session.id} className="skill-card">
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+              <div className="session-card-header">
                 <h3>{session.skill_title}</h3>
                 <span className="session-date">
                   {new Date(session.created_at).toLocaleDateString("en-US", {
@@ -291,10 +321,7 @@ function Dashboard({ user, setUser }) {
                   })}
                 </span>
               </div>
-              <p className="skill-type">
-                {session.skill_type === "offer" ? "Teaching" : "Learning"}
-              </p>
-              <p className="session-requester">{getSessionLabel(session)}</p>
+              <h4 className="session-requester">{getSessionLabel(session)}</h4>
               <p className="skill-author">
                 Status: <span className={`status-${session.status}`}>{session.status}</span>
               </p>
@@ -311,12 +338,7 @@ function Dashboard({ user, setUser }) {
             </div>
           ))}
 
-          {sessions.filter(s => {
-            if (sessionFilter !== "all" && s.skill_type !== sessionFilter) return false;
-            if (sessionDirection === "incoming" && s.requester_name === user.name) return false;
-            if (sessionDirection === "outgoing" && s.requester_name !== user.name) return false;
-            return true;
-          }).length === 0 && (
+          {filteredSessions.length === 0 && (
             <p className="subtitle">No sessions match your filters</p>
           )}
         </div>
