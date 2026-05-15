@@ -205,7 +205,7 @@ function Dashboard({ user, setUser }) {
 
       {view === "post" && (
         <div className="post-form">
-          <h2>Post a Skill</h2>
+
           <input
             placeholder="Skill title (e.g. React, Math, Photoshop)"
             value={title}
@@ -226,7 +226,7 @@ function Dashboard({ user, setUser }) {
 
       {view === "feed" && (
         <div>
-                    <h2>Browse Skills</h2>
+
 
           <div className="search-bar">
             <input
@@ -287,7 +287,7 @@ function Dashboard({ user, setUser }) {
 
       {view === "sessions" && (
         <div>
-          <h2>Session Requests</h2>
+
 
           <div className="session-filters">
             <select
