@@ -23,7 +23,7 @@ function Register() {
       const data = await res.json();
 
       if (data.success) {
-        alert("Account created! 🎉");
+      setMessage("Account created! Redirecting...");
         navigate("/");
       } else {
         setMessage(data.error || "Registration failed");

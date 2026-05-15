@@ -7,7 +7,7 @@
 body {
   font-family: 'Plus Jakarta Sans', sans-serif;
   background: #0f172a;
-  /* Subtle animated-style gradient background */
+
   background-image: 
     radial-gradient(at 0% 0%, rgba(86, 124, 141, 0.15) 0px, transparent 50%),
     radial-gradient(at 100% 100%, rgba(47, 65, 86, 0.2) 0px, transparent 50%);
@@ -17,7 +17,7 @@ body {
   align-items: center;
   justify-content: center;
   color: #f1f5f9;
-  overflow: hidden;
+   overflow-y: auto;
 }
 .container {
   width: 100%;
@@ -94,7 +94,7 @@ button:hover {
   font-size: 14px;
   color: #94a3b8;
 }
-/* Styled the link specifically for React Router */
+
 .link a {
   color: #567C8D;
   text-decoration: none;
@@ -104,4 +104,136 @@ button:hover {
 .link a:hover {
   color: #C8D9E6;
   text-decoration: underline;
+}
+
+body.scrollable {
+  height: auto;
+  min-height: 100vh;
+  overflow-y: auto;
+  align-items: flex-start;
+  padding: 40px 20px;
+}
+
+.dashboard {
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+.dashboard-header h1 {
+  font-size: 24px;
+  font-weight: 800;
+}
+
+.subtitle {
+  color: #94a3b8;
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+.dashboard-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.dashboard-actions button {
+  margin-top: 0;
+  width: auto;
+  padding: 12px 20px;
+  font-size: 14px;
+}
+
+.logout-btn {
+  background: transparent !important;
+  border: 1px solid rgba(255,255,255,0.1) !important;
+  color: #94a3b8 !important;
+}
+
+.logout-btn:hover {
+  background: rgba(255,255,255,0.05) !important;
+  transform: none !important;
+}
+
+.skill-card {
+  background: rgba(30, 41, 59, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 20px 24px;
+  margin-bottom: 12px;
+}
+
+.skill-card h3 {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.skill-type {
+  font-size: 13px;
+  color: #567C8D;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.skill-desc {
+  font-size: 14px;
+  color: #94a3b8;
+  margin-bottom: 8px;
+}
+
+.skill-author {
+  font-size: 12px;
+  color: #64748b;
+}
+
+.skill-card button {
+  margin-top: 12px;
+  width: auto;
+  padding: 10px 20px;
+  font-size: 14px;
+}
+
+.post-form input,
+.post-form select {
+  width: 100%;
+  padding: 16px 20px;
+  margin: 10px 0;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  outline: none;
+  background: rgba(15, 23, 42, 0.6);
+  color: #fff;
+  font-size: 15px;
+}
+
+.post-form button {
+  width: 100%;
+}
+
+.search-bar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  align-items: center;
+}
+
+.search-bar input {
+  margin: 0;
+  flex: 1;
+}
+
+.search-bar button {
+  margin-top: 0;
+  width: auto;
+  padding: 16px 20px;
 }
