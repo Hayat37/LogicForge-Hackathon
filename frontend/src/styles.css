@@ -1,13 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
+
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
+
 body {
   font-family: 'Plus Jakarta Sans', sans-serif;
   background: #0f172a;
-
   background-image: 
     radial-gradient(at 0% 0%, rgba(86, 124, 141, 0.15) 0px, transparent 50%),
     radial-gradient(at 100% 100%, rgba(47, 65, 86, 0.2) 0px, transparent 50%);
@@ -17,8 +18,22 @@ body {
   align-items: center;
   justify-content: center;
   color: #f1f5f9;
-   overflow-y: auto;
+  overflow-y: auto;
 }
+
+body.scrollable {
+  height: auto;
+  min-height: 100vh;
+  overflow-y: auto;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 0;
+}
+
+body.scrollable > #root {
+  width: 100%;
+}
+
 .container {
   width: 100%;
   max-width: 420px;
@@ -32,10 +47,12 @@ body {
   text-align: center;
   animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
+
 @keyframes slideUp {
   from { opacity: 0; transform: translateY(30px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
 .logo {
   font-size: 32px;
   font-weight: 800;
@@ -46,6 +63,7 @@ body {
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+
 h2 {
   font-size: 16px;
   font-weight: 400;
@@ -54,6 +72,7 @@ h2 {
   letter-spacing: 1px;
   text-transform: uppercase;
 }
+
 input {
   width: 100%;
   padding: 16px 20px;
@@ -66,11 +85,13 @@ input {
   font-size: 15px;
   transition: all 0.3s ease;
 }
+
 input:focus {
   border-color: #567C8D;
   background: rgba(15, 23, 42, 0.9);
   box-shadow: 0 0 0 4px rgba(86, 124, 141, 0.1);
 }
+
 button {
   width: 100%;
   padding: 16px;
@@ -84,11 +105,13 @@ button {
   font-weight: 700;
   transition: all 0.3s ease;
 }
+
 button:hover {
   background: #6a95aa;
   transform: translateY(-2px);
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
+
 .link {
   margin-top: 25px;
   font-size: 14px;
@@ -101,23 +124,25 @@ button:hover {
   font-weight: 600;
   margin-left: 5px;
 }
+
 .link a:hover {
   color: #C8D9E6;
   text-decoration: underline;
 }
 
-body.scrollable {
-  height: auto;
-  min-height: 100vh;
-  overflow-y: auto;
-  align-items: flex-start;
-  padding: 40px 20px;
-}
+/* ── Dashboard ── */
 
 .dashboard {
   width: 100%;
-  max-width: 700px;
-  margin: 0 auto;
+  min-height: 100vh;
+  padding: 40px 60px;
+  align-self: stretch;  /* add this */
+}
+
+.dashboard h1 {
+  color: #f1f5f9;
+  font-size: 20px;
+  font-weight: 700;
 }
 
 .dashboard h2 {
@@ -129,12 +154,6 @@ body.scrollable {
   margin-bottom: 16px;
 }
 
-.dashboard h1 {
-  color: #f1f5f9;
-  font-size: 20px;
-  font-weight: 700;
-}
-
 .dashboard-header {
   display: flex;
   justify-content: space-between;
@@ -142,17 +161,6 @@ body.scrollable {
   flex-wrap: wrap;
   gap: 16px;
   margin-bottom: 8px;
-}
-
-.dashboard-header h1 {
-  font-size: 24px;
-  font-weight: 800;
-}
-
-.subtitle {
-  color: #94a3b8;
-  font-size: 14px;
-  margin-top: 4px;
 }
 
 .dashboard-actions {
@@ -179,12 +187,41 @@ body.scrollable {
   transform: none !important;
 }
 
+.subtitle {
+  color: #94a3b8;
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+.user-info {
+  margin-bottom: 8px;
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  margin: 16px 0;
+}
+
+.feed-message {
+  color: #567C8D;
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+.card-message {
+  color: #567C8D;
+  font-size: 13px;
+  margin-top: 8px;
+}
+
 .skill-card {
   background: rgba(30, 41, 59, 0.7);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 20px;
   padding: 20px 24px;
   margin-bottom: 12px;
+    width: 100%;
 }
 
 .skill-card h3 {
@@ -253,7 +290,6 @@ body.scrollable {
   padding: 16px 20px;
 }
 
-
 .badge {
   display: inline-block;
   background: #ef4444;
@@ -265,28 +301,6 @@ body.scrollable {
   text-align: center;
   line-height: 18px;
   margin-left: 6px;
-}
-
-.user-info {
-  margin-bottom: 8px;
-}
-
-.divider {
-  border: none;
-  border-top: 1px solid rgba(255,255,255,0.08);
-  margin: 16px 0;
-}
-
-.feed-message {
-  color: #567C8D;
-  font-size: 14px;
-  margin-bottom: 16px;
-}
-
-.card-message {
-  color: #567C8D;
-  font-size: 13px;
-  margin-top: 8px;
 }
 
 .session-actions {
@@ -312,3 +326,48 @@ body.scrollable {
 .status-pending { color: #567C8D; }
 .status-accepted { color: #22c55e; }
 .status-declined { color: #ef4444; }
+
+/* ── Responsive ── */
+
+@media (max-width: 600px) {
+  .dashboard {
+    padding: 20px 16px;
+  }
+
+  .dashboard-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .dashboard-actions {
+    width: 100%;
+  }
+
+  .dashboard-actions button {
+    flex: 1;
+    min-width: 100px;
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+
+  .search-bar {
+    flex-direction: column;
+      width: 100%;
+  }
+
+  .search-bar button {
+    width: 100%;
+    padding: 14px;
+  }
+
+  .session-actions {
+    flex-direction: column;
+  }
+
+  .accept-btn,
+  .decline-btn {
+    width: 100%;
+  }
+}
+
