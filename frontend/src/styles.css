@@ -54,15 +54,16 @@ body.scrollable > #root {
 }
 
 .logo {
-  font-size: 32px;
+  font-size: clamp(32px, 3.5vw, 52px);
   font-weight: 800;
-  letter-spacing: -1.5px;
-  margin-bottom: 8px;
+  letter-spacing: -2px;
   background: linear-gradient(135deg, #fff 0%, #94a3b8 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  padding-right: 4px;
+  padding: 4px 8px 6px 0;
+  line-height: 1.15;
+  display: inline-block;
 }
 
 h2 {
@@ -131,18 +132,16 @@ button:hover {
   text-decoration: underline;
 }
 
-/* ── Dashboard ── */
-
 .dashboard {
   width: 100%;
   min-height: 100vh;
   padding: 40px 60px;
-  align-self: stretch;  /* add this */
+  align-self: stretch;
 }
 
 .dashboard h1 {
   color: #f1f5f9;
-  font-size: 20px;
+  font-size: clamp(18px, 2vw, 28px);
   font-weight: 700;
 }
 
@@ -150,17 +149,17 @@ button:hover {
   color: #f1f5f9;
   text-transform: none;
   letter-spacing: 0;
-  font-size: 18px;
+  font-size: clamp(18px, 2vw, 26px);
   font-weight: 700;
   margin-bottom: 16px;
 }
 
+
 .dashboard-header {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 16px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
   margin-bottom: 8px;
 }
 
@@ -168,13 +167,16 @@ button:hover {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
+  align-items: center;
+  width: 100%;
+  justify-content: flex-end;
 }
 
 .dashboard-actions button {
   margin-top: 0;
   width: auto;
-  padding: 12px 20px;
-  font-size: 14px;
+  padding: 12px 22px;
+  font-size: clamp(13px, 1.2vw, 16px);
 }
 
 .logout-btn {
@@ -190,7 +192,7 @@ button:hover {
 
 .subtitle {
   color: #94a3b8;
-  font-size: 14px;
+  font-size: clamp(13px, 1.2vw, 16px);
   margin-top: 4px;
 }
 
@@ -222,11 +224,11 @@ button:hover {
   border-radius: 20px;
   padding: 20px 24px;
   margin-bottom: 12px;
-    width: 100%;
+  width: 100%;
 }
 
 .skill-card h3 {
-  font-size: 16px;
+  font-size: clamp(15px, 1.5vw, 20px);
   font-weight: 700;
   margin-bottom: 6px;
 }
@@ -239,13 +241,13 @@ button:hover {
 }
 
 .skill-desc {
-  font-size: 14px;
+  font-size: clamp(13px, 1.2vw, 16px);
   color: #94a3b8;
   margin-bottom: 8px;
 }
 
 .skill-author {
-  font-size: 12px;
+  font-size: clamp(12px, 1vw, 14px);
   color: #64748b;
 }
 
@@ -328,6 +330,23 @@ button:hover {
 .status-accepted { color: #22c55e; }
 .status-declined { color: #ef4444; }
 
+.filter-select {
+  padding: 10px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(15, 23, 42, 0.6);
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+  outline: none;
+}
+
+.session-date {
+  font-size: 11px;
+  color: #64748b;
+  white-space: nowrap;
+  margin-left: 8px;
+}
 
 @media (max-width: 600px) {
   .dashboard {
@@ -353,7 +372,7 @@ button:hover {
 
   .search-bar {
     flex-direction: column;
-      width: 100%;
+    width: 100%;
   }
 
   .search-bar button {
@@ -370,22 +389,3 @@ button:hover {
     width: 100%;
   }
 }
-
-.filter-select {
-  padding: 10px 16px;
-  border-radius: 12px;
-  border: 1px solid rgba(255,255,255,0.1);
-  background: rgba(15, 23, 42, 0.6);
-  color: #fff;
-  font-size: 14px;
-  cursor: pointer;
-  outline: none;
-}
-
-.session-date {
-  font-size: 11px;
-  color: #64748b;
-  white-space: nowrap;
-  margin-left: 8px;
-}
-

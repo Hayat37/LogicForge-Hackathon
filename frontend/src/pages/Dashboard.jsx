@@ -125,22 +125,24 @@ const requestSession = async (skill_id) => {
     <div className="dashboard">
 
       <div className="dashboard-header">
-        <div className="logo" style={{ fontSize: 22 }}>SkillSwap</div>
-        <div className="dashboard-actions">
-          <button onClick={() => { setView("feed"); setMessage(""); }}>
-            Skills Feed
-          </button>
-          <button onClick={() => { setView("post"); setMessage(""); }}>
-            + Post Skill
-          </button>
-          <button onClick={() => { setView("sessions"); setMessage(""); }}>
-            Sessions {pendingSessions.length > 0 && (
-              <span className="badge">{pendingSessions.length}</span>
-            )}
-          </button>
-          <button className="logout-btn" onClick={logout}>Logout</button>
-        </div>
-      </div>
+  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
+    <div className="logo">SkillSwap</div>
+    <div className="dashboard-actions">
+      <button onClick={() => { setView("feed"); setMessage(""); }}>
+        Skills Feed
+      </button>
+      <button onClick={() => { setView("post"); setMessage(""); }}>
+        + Post Skill
+      </button>
+      <button onClick={() => { setView("sessions"); setMessage(""); }}>
+        Sessions {pendingSessions.length > 0 && (
+          <span className="badge">{pendingSessions.length}</span>
+        )}
+      </button>
+      <button className="logout-btn" onClick={logout}>Logout</button>
+    </div>
+  </div>
+</div>
 
       <hr className="divider" />
 
