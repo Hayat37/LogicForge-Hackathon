@@ -217,7 +217,7 @@ function Dashboard({ user, setUser }) {
             <div key={skill.id} className="skill-card">
               <h3>{skill.title}</h3>
               <p className="skill-type">
-                {skill.type === "offer" ? "🎓 Teaching" : "🙋 Needs help"}
+                {skill.type === "offer" ? "Teaching" : "Needs help"}
               </p>
               {skill.description && <p className="skill-desc">{skill.description}</p>}
               <p className="skill-author">Posted by {skill.posted_by}</p>
@@ -281,7 +281,7 @@ function Dashboard({ user, setUser }) {
                 </span>
               </div>
               <p className="skill-type">
-                {session.skill_type === "offer" ? "🎓 Teaching" : "🙋 Learning"}
+                {session.skill_type === "offer" ? "Teaching" : "Learning"}
               </p>
               <p className="skill-desc">
                 {session.requester_name === user.name ? "You requested" : `From: ${session.requester_name}`}
