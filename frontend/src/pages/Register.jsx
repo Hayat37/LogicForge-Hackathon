@@ -36,12 +36,16 @@ function Register() {
 
   return (
     <div className="container">
+<<<<<<< HEAD
       <div className="logo">SkillSwap </div>
+=======
+      <div className="logo">~ SkillSwap ~</div>
+>>>>>>> e0ef59b (improved register page UI)
       <h2>Create Account</h2>
       <input
         placeholder="Full Name"
         value={name}
-        onChange={(e) => setName(e.target.value)}
+        onChange={(e) => setName (e.target.value)}
       />
       <input
         type="email"
