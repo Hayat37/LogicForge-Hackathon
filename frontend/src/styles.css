@@ -62,6 +62,7 @@ body.scrollable > #root {
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
+  padding-right: 4px;
 }
 
 h2 {
