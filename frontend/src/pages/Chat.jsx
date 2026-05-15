@@ -30,7 +30,7 @@ function Chat({ user, setUser }) {
   useEffect(() => {
     const fetchContacts = async () => {
       try {
-        const res = await fetch(`https://skillswap-pro.infinityfreeapp.com/backend/sessions.php?user_id=${user.id}`);
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/backend/sessions.php?user_id=${user.id}`);
         const data = await res.json();
         if (data.success) {
           const accepted = data.sessions.filter(s => s.status === "accepted");
@@ -55,7 +55,7 @@ function Chat({ user, setUser }) {
   const fetchMessages = async () => {
     if (!partnerId || partnerId === "undefined") return;
     try {
-      const res = await fetch(`https://skillswap-pro.infinityfreeapp.com/backend/messages.php?user1=${user.id}&user2=${partnerId}`);
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/backend/messages.php?user1=${user.id}&user2=${partnerId}`);
       const data = await res.json();
       if (data.success) setMessages(data.messages);
     } catch (e) { console.error(e); }
@@ -73,7 +73,7 @@ function Chat({ user, setUser }) {
     e.preventDefault();
     if (!newMessage.trim() || !partnerId) return;
 
-    const res = await fetch("https://skillswap-pro.infinityfreeapp.com/backend/messages.php", {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/backend/messages.php`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ sender_id: user.id, receiver_id: partnerId, message: newMessage }),

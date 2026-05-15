@@ -29,7 +29,7 @@ function Dashboard({ user, setUser }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const resSkills = await fetch("https://skillswap-pro.infinityfreeapp.com/backend/skills.php");
+        const resSkills = await fetch(`${import.meta.env.VITE_API_URL}/backend/skills.php`);
         const dataSkills = await resSkills.json();
         if (dataSkills.success) setSkills(dataSkills.skills);
       } catch (error) {
@@ -37,7 +37,7 @@ function Dashboard({ user, setUser }) {
       }
       try {
         const resSessions = await fetch(
-          `https://skillswap-pro.infinityfreeapp.com/backend/sessions.php?user_id=${user.id}`
+          `${import.meta.env.VITE_API_URL}/api/sessions.php?user_id=${user.id}`
         );
         const dataSessions = await resSessions.json();
         if (dataSessions.success) setSessions(dataSessions.sessions);
@@ -51,14 +51,14 @@ function Dashboard({ user, setUser }) {
   }, [user.id]);
 
   const fetchSkills = async () => {
-    const res = await fetch("https://skillswap-pro.infinityfreeapp.com/backend/skills.php");
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/skills.php`);
     const data = await res.json();
     if (data.success) setSkills(data.skills);
   };
 
   const fetchSessions = async () => {
     const res = await fetch(
-      `https://skillswap-pro.infinityfreeapp.com/backend/sessions.php?user_id=${user.id}`
+      `${import.meta.env.VITE_API_URL}/api/sessions.php?user_id=${user.id}`
     );
     const data = await res.json();
     if (data.success) setSessions(data.sessions);
@@ -69,7 +69,7 @@ function Dashboard({ user, setUser }) {
       setMessage("Please enter a skill title");
       return;
     }
-    const res = await fetch("https://skillswap-pro.infinityfreeapp.com/backend/skills.php", {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/skills.php`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ user_id: user.id, title, type, description }),
@@ -90,14 +90,14 @@ function Dashboard({ user, setUser }) {
 
   const searchSkills = async () => {
     const res = await fetch(
-      `https://skillswap-pro.infinityfreeapp.com/backend/search.php?q=${search}`
+      `${import.meta.env.VITE_API_URL}/api/search.php?q=${search}`
     );
     const data = await res.json();
     if (data.success) setSkills(data.results);
   };
 
   const requestSession = async (skill_id) => {
-    const res = await fetch("https://skillswap-pro.infinityfreeapp.com/backend/sessions.php", {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/sessions.php`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -114,7 +114,7 @@ function Dashboard({ user, setUser }) {
   };
 
   const respondToSession = async (session_id, status) => {
-    const res = await fetch("https://skillswap-pro infinityfreeapp.com/backend/sessions.php", {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/sessions.php`, {
       method: "POST", // Changed to POST if your backend expects POST for response
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ session_id, status, action: 'respond' }),

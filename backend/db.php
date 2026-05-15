@@ -1,10 +1,10 @@
 <?php
-$host = "localhost";
-$user = "root";
-$password = "";
-$dbname = "skillswap";
+$host = getenv('DB_HOST');
+$db   = getenv('DB_NAME');
+$user = getenv('DB_USER');
+$pass = getenv('DB_PASS');
 
-$conn = new mysqli("sql200.infinityfree.com", "if0_41929215", "xmgAoyhTbd", "if0_41929215_XXX ");
+$conn = new PDO("mysql:host=$host;dbname=$db", $user, $pass);
 
 if ($conn->connect_error) {
     die(json_encode(["error" => "Connection failed: " . $conn->connect_error]));
