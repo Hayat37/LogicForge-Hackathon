@@ -14,6 +14,7 @@ include "db.php";
 $method = $_SERVER['REQUEST_METHOD'];
 
 if ($method === 'POST') {
+if ($method === 'POST') {
     $data = json_decode(file_get_contents("php://input"), true);
 
     if (empty($data['requester_id']) || empty($data['skill_id'])) {
@@ -21,6 +22,7 @@ if ($method === 'POST') {
         exit;
     }
 
+    // Prevent requesting own skill
     $check = $conn->prepare("SELECT user_id FROM skills WHERE id = ?");
     $check->bind_param("i", $data['skill_id']);
     $check->execute();
@@ -33,6 +35,17 @@ if ($method === 'POST') {
 
     if ($skill['user_id'] == $data['requester_id']) {
         echo json_encode(["error" => "You cannot request your own skill"]);
+        exit;
+    }
+
+    // Prevent duplicate requests
+    $dupCheck = $conn->prepare("SELECT id FROM sessions WHERE requester_id = ? AND skill_id = ?");
+    $dupCheck->bind_param("ii", $data['requester_id'], $data['skill_id']);
+    $dupCheck->execute();
+    $dupCheck->store_result();
+
+    if ($dupCheck->num_rows > 0) {
+        echo json_encode(["error" => "You have already requested this session"]);
         exit;
     }
 

@@ -102,7 +102,7 @@ function Dashboard({ user, setUser }) {
     <div className="dashboard">
 
       <div className="dashboard-header">
-        <div className="logo" style={{ fontSize: 24 }}>SkillSwap 🔄</div>
+        <div className="logo" style={{ fontSize: 24 }}>SkillSwap</div>
         <div className="dashboard-actions">
           <button onClick={() => { setView("feed"); setMessage(""); }}>
             Skills Feed
