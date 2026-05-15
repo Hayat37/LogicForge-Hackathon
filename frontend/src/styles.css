@@ -149,11 +149,10 @@ button:hover {
   color: #f1f5f9;
   text-transform: none;
   letter-spacing: 0;
-  font-size: clamp(18px, 2vw, 26px);
+  font-size: clamp(16px, 1.8vw, 24px);
   font-weight: 700;
   margin-bottom: 16px;
 }
-
 
 .dashboard-header {
   display: flex;
@@ -168,8 +167,6 @@ button:hover {
   gap: 10px;
   flex-wrap: wrap;
   align-items: center;
-  width: 100%;
-  justify-content: flex-end;
 }
 
 .dashboard-actions button {
@@ -388,4 +385,171 @@ button:hover {
   .decline-btn {
     width: 100%;
   }
+}
+
+.theme-toggle {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(30, 41, 59, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.theme-toggle:hover {
+  transform: translateY(-2px) scale(1.1);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.theme-toggle.spin {
+  animation: spin 0.4s ease;
+}
+
+body.light-mode {
+  background: #dbe8f0;
+  background-image:
+    radial-gradient(at 0% 0%, rgba(86, 124, 141, 0.18) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(86, 124, 141, 0.12) 0px, transparent 50%);
+  color: #0f172a;
+}
+
+body.light-mode .logo {
+  background: linear-gradient(135deg, #0f172a 0%, #334155 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+body.light-mode .dashboard h1,
+body.light-mode .dashboard h2,
+body.light-mode .skill-card h3 {
+  color: #0f172a;
+}
+
+body.light-mode .skill-card {
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(86, 124, 141, 0.25);
+  box-shadow: 0 2px 8px rgba(86, 124, 141, 0.08);
+}
+
+body.light-mode .dashboard-actions button {
+  background: #567C8D;
+  color: #fff;
+}
+
+body.light-mode .subtitle {
+  color: #475569;
+}
+
+body.light-mode .skill-desc {
+  color: #475569;
+}
+
+body.light-mode .skill-author {
+  color: #64748b;
+}
+
+body.light-mode .session-date {
+  color: #64748b;
+}
+
+body.light-mode .feed-message {
+  color: #3d6275;
+}
+
+body.light-mode .divider {
+  border-top: 1px solid rgba(86, 124, 141, 0.2);
+}
+
+body.light-mode input,
+body.light-mode .post-form input,
+body.light-mode .post-form select,
+body.light-mode .filter-select {
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(86, 124, 141, 0.3);
+  color: #0f172a;
+}
+
+body.light-mode input::placeholder {
+  color: #94a3b8;
+}
+
+body.light-mode input:focus {
+  background: #ffffff;
+  border-color: #567C8D;
+  box-shadow: 0 0 0 4px rgba(86, 124, 141, 0.12);
+}
+
+body.light-mode .logout-btn {
+  background: transparent !important;
+  border: 1px solid rgba(86, 124, 141, 0.3) !important;
+  color: #475569 !important;
+}
+
+body.light-mode .logout-btn:hover {
+  background: rgba(86, 124, 141, 0.08) !important;
+}
+
+body.light-mode .theme-toggle {
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(86, 124, 141, 0.25);
+  box-shadow: 0 4px 12px rgba(86, 124, 141, 0.15);
+}
+
+body.light-mode .theme-toggle:hover {
+  background: #ffffff;
+}
+
+body.light-mode .container {
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(86, 124, 141, 0.2);
+  box-shadow: 0 25px 50px -12px rgba(86, 124, 141, 0.15);
+}
+
+body.light-mode .container h2 {
+  color: #475569;
+}
+
+body.light-mode .container input {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(86, 124, 141, 0.3);
+  color: #0f172a;
+}
+
+body.light-mode .container input::placeholder {
+  color: #94a3b8;
+}
+
+body.light-mode .container input:focus {
+  background: #ffffff;
+  border-color: #567C8D;
+  box-shadow: 0 0 0 4px rgba(86, 124, 141, 0.12);
+}
+
+body.light-mode .container .logo {
+  background: linear-gradient(135deg, #0f172a 0%, #334155 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+body.light-mode .link {
+  color: #475569;
 }

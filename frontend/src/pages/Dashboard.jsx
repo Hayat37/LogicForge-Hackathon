@@ -11,9 +11,19 @@ function Dashboard({ user, setUser }) {
   const [search, setSearch] = useState("");
   const [message, setMessage] = useState("");
   const [cardMessages, setCardMessages] = useState({});
-  const navigate = useNavigate();
   const [sessionFilter, setSessionFilter] = useState("all");
-const [sessionDirection, setSessionDirection] = useState("all");
+  const [sessionDirection, setSessionDirection] = useState("all");
+  const [darkMode, setDarkMode] = useState(() => {
+    return localStorage.getItem("theme") !== "light";
+  });
+  const [spinning, setSpinning] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    document.body.classList.toggle("light-mode", !darkMode);
+    localStorage.setItem("theme", darkMode ? "dark" : "light");
+    return () => document.body.classList.remove("light-mode");
+  }, [darkMode]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -64,7 +74,7 @@ const [sessionDirection, setSessionDirection] = useState("all");
       body: JSON.stringify({ user_id: user.id, title, type, description }),
     });
     const data = await res.json();
-if (data.success) {
+    if (data.success) {
       setMessage("Skill posted successfully!");
       setTimeout(() => setMessage(""), 3000);
       setTitle("");
@@ -85,7 +95,7 @@ if (data.success) {
     if (data.success) setSkills(data.results);
   };
 
-const requestSession = async (skill_id) => {
+  const requestSession = async (skill_id) => {
     const res = await fetch("http://localhost/LogicForge-Hackathon/backend/sessions.php", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -112,6 +122,12 @@ const requestSession = async (skill_id) => {
     if (data.success) fetchSessions();
   };
 
+  const handleThemeToggle = () => {
+    setSpinning(true);
+    setDarkMode(prev => !prev);
+    setTimeout(() => setSpinning(false), 400);
+  };
+
   const pendingSessions = sessions.filter(
     s => s.status === "pending" && s.requester_name !== user.name
   );
@@ -124,25 +140,32 @@ const requestSession = async (skill_id) => {
   return (
     <div className="dashboard">
 
+      <button
+        className={`theme-toggle ${spinning ? "spin" : ""}`}
+        onClick={handleThemeToggle}
+      >
+        {darkMode ? "☀️" : "🌙"}
+      </button>
+
       <div className="dashboard-header">
-  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
-    <div className="logo">SkillSwap</div>
-    <div className="dashboard-actions">
-      <button onClick={() => { setView("feed"); setMessage(""); }}>
-        Skills Feed
-      </button>
-      <button onClick={() => { setView("post"); setMessage(""); }}>
-        + Post Skill
-      </button>
-      <button onClick={() => { setView("sessions"); setMessage(""); }}>
-        Sessions {pendingSessions.length > 0 && (
-          <span className="badge">{pendingSessions.length}</span>
-        )}
-      </button>
-      <button className="logout-btn" onClick={logout}>Logout</button>
-    </div>
-  </div>
-</div>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
+          <div className="logo">SkillSwap</div>
+          <div className="dashboard-actions">
+            <button onClick={() => { setView("feed"); setMessage(""); }}>
+              Skills Feed
+            </button>
+            <button onClick={() => { setView("post"); setMessage(""); }}>
+              + Post Skill
+            </button>
+            <button onClick={() => { setView("sessions"); setMessage(""); }}>
+              Sessions {pendingSessions.length > 0 && (
+                <span className="badge">{pendingSessions.length}</span>
+              )}
+            </button>
+            <button className="logout-btn" onClick={logout}>Logout</button>
+          </div>
+        </div>
+      </div>
 
       <hr className="divider" />
 
