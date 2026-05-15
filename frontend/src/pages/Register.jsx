@@ -13,7 +13,6 @@ function Register() {
       setMessage("Please fill in all fields");
       return;
     }
-
     try {
       const res = await fetch("http://localhost/LogicForge-Hackathon/backend/register.php", {
         method: "POST",
@@ -21,31 +20,25 @@ function Register() {
         body: JSON.stringify({ name, email, password }),
       });
       const data = await res.json();
-
       if (data.success) {
-      setMessage("Account created! Redirecting...");
+        setMessage("Account created! Redirecting...");
         navigate("/");
       } else {
         setMessage(data.error || "Registration failed");
       }
-
-} catch {
-  setMessage("Server error. Check if your PHP backend is running.");
-}
+    } catch {
+      setMessage("Server error. Check if your PHP backend is running.");
+    }
   };
 
   return (
     <div className="container">
-<<<<<<< HEAD
-      <div className="logo">SkillSwap </div>
-=======
-      <div className="logo">~ SkillSwap ~</div>
->>>>>>> e0ef59b (improved register page UI)
+      <div className="logo">SkillSwap</div>
       <h2>Create Account</h2>
       <input
         placeholder="Full Name"
         value={name}
-        onChange={(e) => setName (e.target.value)}
+        onChange={(e) => setName(e.target.value)}
       />
       <input
         type="email"

@@ -10,16 +10,38 @@ function Dashboard({ user, setUser }) {
   const [description, setDescription] = useState("");
   const [search, setSearch] = useState("");
   const [message, setMessage] = useState("");
+  const [cardMessages, setCardMessages] = useState({});
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("http://localhost/LogicForge-Hackathon/backend/skills.php")
-      .then(res => res.json())
-      .then(data => { if (data.success) setSkills(data.skills); });
-    fetchSessions();
+    const fetchData = async () => {
+      try {
+        const resSkills = await fetch("http://localhost/LogicForge-Hackathon/backend/skills.php");
+        const dataSkills = await resSkills.json();
+        if (dataSkills.success) setSkills(dataSkills.skills);
+      } catch (error) {
+        console.error("Error fetching skills:", error);
+      }
+      try {
+        const resSessions = await fetch(
+          `http://localhost/LogicForge-Hackathon/backend/sessions.php?user_id=${user.id}`
+        );
+        const dataSessions = await resSessions.json();
+        if (dataSessions.success) setSessions(dataSessions.sessions);
+      } catch (error) {
+        console.error("Error fetching sessions:", error);
+      }
+    };
+    fetchData();
     document.body.classList.add("scrollable");
     return () => document.body.classList.remove("scrollable");
-  }, []);
+  }, [user.id]);
+
+  const fetchSkills = async () => {
+    const res = await fetch("http://localhost/LogicForge-Hackathon/backend/skills.php");
+    const data = await res.json();
+    if (data.success) setSkills(data.skills);
+  };
 
   const fetchSessions = async () => {
     const res = await fetch(
@@ -27,12 +49,6 @@ function Dashboard({ user, setUser }) {
     );
     const data = await res.json();
     if (data.success) setSessions(data.sessions);
-  };
-
-  const fetchSkills = async () => {
-    const res = await fetch("http://localhost/LogicForge-Hackathon/backend/skills.php");
-    const data = await res.json();
-    if (data.success) setSkills(data.skills);
   };
 
   const postSkill = async () => {
@@ -76,7 +92,7 @@ function Dashboard({ user, setUser }) {
       }),
     });
     const data = await res.json();
-    setMessage(data.message || data.error);
+    setCardMessages(prev => ({ ...prev, [skill_id]: data.message || data.error }));
   };
 
   const respondToSession = async (session_id, status) => {
@@ -102,7 +118,7 @@ function Dashboard({ user, setUser }) {
     <div className="dashboard">
 
       <div className="dashboard-header">
-        <div className="logo" style={{ fontSize: 24 }}>SkillSwap</div>
+        <div className="logo" style={{ fontSize: 22 }}>SkillSwap</div>
         <div className="dashboard-actions">
           <button onClick={() => { setView("feed"); setMessage(""); }}>
             Skills Feed
@@ -119,25 +135,21 @@ function Dashboard({ user, setUser }) {
         </div>
       </div>
 
-      <hr style={{ borderColor: "rgba(255,255,255,0.08)", margin: "16px 0" }} />
-
+      <hr className="divider" />
 
       <div className="user-info">
-        <h2 style={{ color: "#f1f5f9", textTransform: "none", letterSpacing: 0 }}>
-          Welcome, {user.name} 👋
-        </h2>
+        <h1>Welcome, {user.name} 👋</h1>
         <p className="subtitle">{user.email}</p>
-        {user.bio && <p className="subtitle" style={{ marginTop: 4 }}>{user.bio}</p>}
+        {user.bio && <p className="subtitle">{user.bio}</p>}
       </div>
 
-      <hr style={{ borderColor: "rgba(255,255,255,0.08)", margin: "16px 0" }} />
+      <hr className="divider" />
 
-      {message && <p className="subtitle" style={{ marginBottom: 16, color: "#567C8D" }}>{message}</p>}
-
+      {message && <p className="feed-message">{message}</p>}
 
       {view === "post" && (
         <div className="post-form">
-          <h2 style={{ color: "#f1f5f9", textTransform: "none", marginBottom: 16 }}>Post a Skill</h2>
+          <h2>Post a Skill</h2>
           <input
             placeholder="Skill title (e.g. React, Math, Photoshop)"
             value={title}
@@ -178,9 +190,14 @@ function Dashboard({ user, setUser }) {
               {skill.description && <p className="skill-desc">{skill.description}</p>}
               <p className="skill-author">Posted by {skill.posted_by}</p>
               {skill.user_id !== user.id && (
-                <button onClick={() => requestSession(skill.id)}>
-                  Request Session
-                </button>
+                <>
+                  <button onClick={() => requestSession(skill.id)}>
+                    Request Session
+                  </button>
+                  {cardMessages[skill.id] && (
+                    <p className="card-message">{cardMessages[skill.id]}</p>
+                  )}
+                </>
               )}
             </div>
           ))}
@@ -189,28 +206,24 @@ function Dashboard({ user, setUser }) {
 
       {view === "sessions" && (
         <div>
-          <h2 style={{ color: "#f1f5f9", textTransform: "none", marginBottom: 16 }}>
-            Session Requests
-          </h2>
+          <h2>Session Requests</h2>
           {sessions.length === 0 && <p className="subtitle">No session requests yet</p>}
           {sessions.map((session) => (
             <div key={session.id} className="skill-card">
               <h3>{session.skill_title}</h3>
-              <p className="skill-type">{session.skill_type === "offer" ? "🎓 Teaching" : "🙋 Needs help"}</p>
+              <p className="skill-type">
+                {session.skill_type === "offer" ? "🎓 Teaching" : "🙋 Needs help"}
+              </p>
               <p className="skill-desc">From: {session.requester_name}</p>
               <p className="skill-author">
-                Status: <span style={{ color: session.status === "pending" ? "#567C8D" : session.status === "accepted" ? "#22c55e" : "#ef4444" }}>
-                  {session.status}
-                </span>
+                Status: <span className={`status-${session.status}`}>{session.status}</span>
               </p>
               {session.status === "pending" && session.requester_name !== user.name && (
-                <div style={{ display: "flex", gap: 10, marginTop: 12 }}>
-                  <button onClick={() => respondToSession(session.id, "accepted")}
-                    style={{ background: "#22c55e" }}>
+                <div className="session-actions">
+                  <button className="accept-btn" onClick={() => respondToSession(session.id, "accepted")}>
                     Accept
                   </button>
-                  <button onClick={() => respondToSession(session.id, "declined")}
-                    style={{ background: "#ef4444" }}>
+                  <button className="decline-btn" onClick={() => respondToSession(session.id, "declined")}>
                     Decline
                   </button>
                 </div>
