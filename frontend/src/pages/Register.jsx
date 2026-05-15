@@ -53,9 +53,8 @@ function Register() {
       });
       const data = await res.json();
       if (data.success) {
-        setIsSuccess(true);
-        setMessage("Account created! Redirecting...");
-        setTimeout(() => navigate("/"), 1500);
+      setMessage("Account created! Redirecting...");
+        navigate("/");
       } else {
         setMessage(data.error || "Registration failed");
       }
@@ -73,7 +72,7 @@ function Register() {
         {darkMode ? "☀️" : "🌙"}
       </button>
       <div className="container">
-        <div className="logo">SkillSwap</div>
+        <div className="logo">~ SkillSwap ~</div>
         <h2>Create Account</h2>
         <input
           placeholder="Full Name"
