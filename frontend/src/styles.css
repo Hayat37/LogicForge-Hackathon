@@ -244,8 +244,18 @@ button:hover {
 }
 
 .skill-author {
-  font-size: clamp(12px, 1vw, 14px);
+  font-size: 13px;
   color: #64748b;
+}
+
+.skill-poster-bio {
+  font-size: 11px;
+  color: #64748b;
+  margin-top: 2px;
+  margin-bottom: 6px;
+  font-style: italic;
+  font-weight: 300;
+  opacity: 0.8;
 }
 
 .skill-card button {
@@ -552,4 +562,49 @@ body.light-mode .container .logo {
 
 body.light-mode .link {
   color: #475569;
+}
+
+body.light-mode .skill-poster-bio {
+  color: #94a3b8;
+}
+
+.bio-input {
+  width: 100%;
+  padding: 14px 20px;
+  margin: 10px 0;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  outline: none;
+  background: rgba(15, 23, 42, 0.6);
+  color: #fff;
+  font-size: 15px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  resize: none;
+  transition: all 0.3s ease;
+}
+
+.bio-input:focus {
+  border-color: #567C8D;
+  background: rgba(15, 23, 42, 0.9);
+  box-shadow: 0 0 0 4px rgba(86, 124, 141, 0.1);
+}
+
+.bio-input::placeholder {
+  color: #64748b;
+}
+
+body.light-mode .bio-input {
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(86, 124, 141, 0.3);
+  color: #0f172a;
+}
+
+body.light-mode .bio-input:focus {
+  background: #ffffff;
+  border-color: #567C8D;
+  box-shadow: 0 0 0 4px rgba(86, 124, 141, 0.12);
+}
+
+body.light-mode .bio-input::placeholder {
+  color: #94a3b8;
 }

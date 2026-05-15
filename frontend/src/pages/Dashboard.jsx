@@ -221,6 +221,9 @@ function Dashboard({ user, setUser }) {
               </p>
               {skill.description && <p className="skill-desc">{skill.description}</p>}
               <p className="skill-author">Posted by {skill.posted_by}</p>
+              {skill.posted_by_bio && (
+                <p className="skill-poster-bio">{skill.posted_by_bio}</p>
+              )}
               {skill.user_id !== user.id && (
                 <>
                   <button onClick={() => requestSession(skill.id)}>

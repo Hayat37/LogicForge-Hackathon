@@ -5,7 +5,9 @@ function Register() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [bio, setBio] = useState("");
   const [message, setMessage] = useState("");
+  const [isSuccess, setIsSuccess] = useState(false);
   const [darkMode, setDarkMode] = useState(() => {
     return localStorage.getItem("theme") !== "light";
   });
@@ -25,20 +27,35 @@ function Register() {
   };
 
   const registerUser = async () => {
-    if (!name || !email || !password) {
+    setIsSuccess(false);
+    if (!name.trim() || !email.trim() || !password) {
       setMessage("Please fill in all fields");
+      return;
+    }
+    if (name.trim().length < 2) {
+      setMessage("Name must be at least 2 characters");
+      return;
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email.trim())) {
+      setMessage("Please enter a valid email address");
+      return;
+    }
+    if (password.length < 6) {
+      setMessage("Password must be at least 6 characters");
       return;
     }
     try {
       const res = await fetch("http://localhost/LogicForge-Hackathon/backend/register.php", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password }),
+        body: JSON.stringify({ name: name.trim(), email: email.trim(), password, bio: bio.trim() }),
       });
       const data = await res.json();
       if (data.success) {
+        setIsSuccess(true);
         setMessage("Account created! Redirecting...");
-        navigate("/");
+        setTimeout(() => navigate("/"), 1500);
       } else {
         setMessage(data.error || "Registration failed");
       }
@@ -61,22 +78,32 @@ function Register() {
         <input
           placeholder="Full Name"
           value={name}
-          onChange={(e) => setName(e.target.value)}
+          onChange={(e) => { setName(e.target.value); setMessage(""); }}
+          onKeyDown={(e) => e.key === "Enter" && registerUser()}
         />
         <input
           type="email"
           placeholder="Email Address"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={(e) => { setEmail(e.target.value); setMessage(""); }}
+          onKeyDown={(e) => e.key === "Enter" && registerUser()}
         />
         <input
           type="password"
           placeholder="Create Password"
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={(e) => { setPassword(e.target.value); setMessage(""); }}
+          onKeyDown={(e) => e.key === "Enter" && registerUser()}
+        />
+        <textarea
+          placeholder="Short bio (optional) e.g. I am a CS student and love teaching math."
+          value={bio}
+          onChange={(e) => setBio(e.target.value)}
+          className="bio-input"
+          rows={3}
         />
         <button onClick={registerUser}>Get Started</button>
-        {message && <p>{message}</p>}
+        {message && <p className={isSuccess ? "auth-message success" : "auth-message error"}>{message}</p>}
         <p className="link">
           Already have an account? <Link to="/">Login</Link>
         </p>
