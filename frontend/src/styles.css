@@ -328,7 +328,6 @@ button:hover {
 .status-accepted { color: #22c55e; }
 .status-declined { color: #ef4444; }
 
-/* ── Responsive ── */
 
 @media (max-width: 600px) {
   .dashboard {
@@ -370,5 +369,23 @@ button:hover {
   .decline-btn {
     width: 100%;
   }
+}
+
+.filter-select {
+  padding: 10px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(15, 23, 42, 0.6);
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+  outline: none;
+}
+
+.session-date {
+  font-size: 11px;
+  color: #64748b;
+  white-space: nowrap;
+  margin-left: 8px;
 }
 
