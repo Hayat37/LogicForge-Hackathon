@@ -46,7 +46,7 @@ function Register() {
       return;
     }
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/backend/register.php`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/register.php`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name: name.trim(), email: email.trim(), password, bio: bio.trim() }),

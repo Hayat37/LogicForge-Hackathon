@@ -28,7 +28,7 @@ export default function Login({ setUser }) {
       setMessage("Please fill in all fields");
       return;
     }
-    const res = await fetch(`${import.meta.env.VITE_API_URL}/backend/login.php`, {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/login.php`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
