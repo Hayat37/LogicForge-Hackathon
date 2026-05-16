@@ -1,8 +1,8 @@
 <?php
-$host = getenv('DB_HOST');
-$db   = getenv('DB_NAME');
-$user = getenv('DB_USER');
-$pass = getenv('DB_PASS');
+$host = 'sql207.byethost6.com';
+$db   = 'b6_41934164_skillswap'; // your actual full db name
+$user = 'b6_41934164';
+$pass = 'G2e:CGJ$i42F6k^';
 
 $conn = new PDO("mysql:host=$host;dbname=$db", $user, $pass);
 
